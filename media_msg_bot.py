@@ -1,3 +1,4 @@
+import discord
 from discord.ext import commands
 
 # setup discord bot
@@ -25,5 +26,18 @@ async def on_message(msg):
             await msg.channel.send(new_msg)
             await msg.delete()
 
+    await client.process_commands(msg)
+
+
+@client.command()
+async def archivpins(ctx, thread: discord.Thread):
+    channel = client.get_channel(ctx.channel.id)
+    pins = await channel.pins()
+    for msg in pins:
+
+        msgstr = '\n**%s**: [%s](%s)' % \
+                 (msg.author.name, msg.created_at.strftime('%H:%M %d-%B-%Y'), msg.jump_url)
+        await thread.send(embed=discord.Embed(description=msgstr, colour=0xFFFFFF))
+        await thread.send(msg.content)
 
 client.run('your discord token')
