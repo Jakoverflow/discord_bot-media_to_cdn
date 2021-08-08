@@ -21,7 +21,7 @@ async def on_message(msg):
         return
 
     if msg.channel.id in channels:
-        if 'media.discordapp.net' in msg.content and msg.content.endswith('.mp4'):
+        if 'media.discordapp.net' in msg.content and (msg.content.endswith('.mp4') or msg.content.endswith('.webm')):
             new_msg = msg.content.replace('media.discordapp.net', 'cdn.discordapp.com')
             await msg.channel.send(new_msg)
             await msg.delete()
