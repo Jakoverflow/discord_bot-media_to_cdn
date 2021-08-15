@@ -167,7 +167,8 @@ class ManageChannels(commands.Cog):
                                                                    '`#test-channel`' % error.argument,
                                                        title='Channel not Found', color=self.embedcolor))
 
-        raise error
+        else:
+            raise error
 
     @removechannel.error
     async def addchannel_error(self, ctx, error):
@@ -184,7 +185,8 @@ class ManageChannels(commands.Cog):
                                                                    '`#test-channel`' % error.argument,
                                                        title='Channel not Found', color=self.embedcolor))
 
-        raise error
+        else:
+            raise error
 
 
 def setup(client):
