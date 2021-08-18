@@ -12,6 +12,7 @@ class ManageChannels(commands.Cog):
         self.client = client
         self.embedcolor = client.embedcolor
         self.added_channels = client.added_channels
+        self.pref = client.command_prefix
 
     def writelog(self, ctx, entry):
         f = open("logs/log_%s_%d-%d.txt" % (ctx.guild.name, datetime.now().year, datetime.now().month), "a")
@@ -29,7 +30,7 @@ class ManageChannels(commands.Cog):
                 await ctx.send(
                     embed=discord.Embed(
                         description='The Channel %s is **already added**.\n\nYou can remove a channel with '
-                                    '`!removechannel [channel]`' % channel.mention,
+                                    '`%sremovechannel [channel]`' % (channel.mention, self.pref),
                         title='Already added', color=self.embedcolor))
 
             except discord.ext.commands.errors as err:
@@ -54,7 +55,7 @@ class ManageChannels(commands.Cog):
                 await ctx.send(
                     embed=discord.Embed(description='New channel:%s\nAdded to replace **media.discordapp.net** video '
                                                     'urls to **cdn.discord.com**.\n\n'
-                                                    'To remove a channel use `!removechannel [channel]`'
+                                                    f'To remove a channel use `{self.pref}removechannel [channel]`'
                                                     % channel.mention, title='Added', color=self.embedcolor))
             except sqlite3.Error as err:
                 self.writelog(ctx, f'error database add :: {ctx.author} :: {channel.id} : {channel} ::: {err}')
@@ -84,7 +85,7 @@ class ManageChannels(commands.Cog):
 
                 await ctx.send(
                     embed=discord.Embed(description='Video urls in channel %s will **no longer** be replaced.\n\n'
-                                                    'You can add other channel with `!addchannel [channel]`.'
+                                                    f'You can add other channel with `{self.pref}addchannel [channel]`.'
                                                     % channel.mention, title='Removed', color=self.embedcolor))
             except sqlite3.Error as err:
                 self.writelog(ctx, f'error database remove :: {ctx.author} :: {channel.id} : {channel} ::: {err}')
@@ -104,7 +105,7 @@ class ManageChannels(commands.Cog):
             try:
                 await ctx.send(
                     embed=discord.Embed(description='Channel %s is **not added**.\n\nYou can add a channel with '
-                                                    '`!addchannel [channel]`.' % channel.mention,
+                                                    '`%saddchannel [channel]`.' % (channel.mention, self.pref),
                                         title='Not added', color=self.embedcolor))
 
             except discord.ext.commands.errors as err:
@@ -127,7 +128,7 @@ class ManageChannels(commands.Cog):
 
             if not dbitems:
                 await ctx.send(embed=discord.Embed(title='No channels added.',
-                                                   description="Use `!addchannel` to add a channel to replace urls.",
+                                                   description=f"Use `{self.pref}addchannel` to add a channel to replace urls.",
                                                    color=self.embedcolor))
                 return
 
@@ -157,7 +158,7 @@ class ManageChannels(commands.Cog):
     async def addchannel_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
             await ctx.channel.send(embed=discord.Embed(description='Plase add a channel like\n'
-                                                                   '`!addchannel test-channel`',
+                                                                   f'`{self.pref}addchannel test-channel`',
                                                        title='Missing Channel', color=self.embedcolor))
 
         elif isinstance(error, commands.ChannelNotFound):
@@ -174,8 +175,8 @@ class ManageChannels(commands.Cog):
     async def addchannel_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
             await ctx.channel.send(embed=discord.Embed(description='Plase add a channel like\n'
-                                                                   '`!removechannel test-channel`\n\n'
-                                                                   'Use `!listchannel` to see which channel are added',
+                                                                   f'`{self.pref}removechannel test-channel`\n\n'
+                                                                   f'Use `{self.pref}listchannel` to see which channel are added',
                                                        title='Missing Channel', color=self.embedcolor))
 
         elif isinstance(error, commands.ChannelNotFound):

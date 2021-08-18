@@ -3,10 +3,13 @@ import sqlite3
 from discord.ext import commands
 from datetime import datetime
 
+prefix = 'med.'
+
 # setup discord bot
-client = commands.Bot(command_prefix='!')
+client = commands.Bot(command_prefix=prefix)
 client.remove_command('help')
 client.embedcolor = 0x236187
+client.command_prefix
 
 # channels to check for messages (given as integer)
 client.added_channels = []
@@ -72,10 +75,10 @@ async def helpinfos(ctx):
     await ctx.send(embed=discord.Embed(description='This Bot single purpose is to replace \n**media.discordapp.net** '
                                                    'video urls to **cdn.discordapp.com**\n\n'
                                                    'As Mod you can use the following commands:\n'
-                                                   '- `!addchannel [channel]` to add a channel where url\'s will be '
+                                                   f'- `{client.command_prefix}addchannel [channel]` to add a channel where url\'s will be '
                                                    'replaced\n '
-                                                   '- `!removechannel [channel]` to remove a channel\n'
-                                                   '- `!listchannel` lists all channels where urls will are being replaced',
+                                                   f'- `{client.command_prefix}removechannel [channel]` to remove a channel\n'
+                                                   f'- `{client.command_prefix}listchannel` lists all channels where urls will are being replaced',
                                        color=client.embedcolor)\
         .set_image(url='https://media.discordapp.net/attachments/347254691966615552/866344332394364938/image0.gif') \
         .set_footer(
