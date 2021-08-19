@@ -3,13 +3,12 @@ import sqlite3
 from discord.ext import commands
 from datetime import datetime
 
-prefix = 'med.'
+prefix = '!'
 
 # setup discord bot
 client = commands.Bot(command_prefix=prefix)
 client.remove_command('help')
 client.embedcolor = 0x236187
-client.command_prefix
 
 # channels to check for messages (given as integer)
 client.added_channels = []
@@ -64,7 +63,8 @@ async def on_message(msg):
             await msg.delete()
 
             # print to console for successfull url replacement
-            print(f'{datetime.now().strftime("%Y-%m-%d/%H:%M:%S")} :: success url replaced :: {msg.author} :: {msg.content}')
+            print(f'{datetime.now().strftime("%Y-%m-%d/%H:%M:%S")} :: success url replaced :: {msg.guild.name} :: '
+                  f'{msg.author} :: {msg.content}')
 
     # continue to process if a command is invoked
     await client.process_commands(msg)
