@@ -1,4 +1,5 @@
 import discord
+import os
 import sqlite3
 from discord.ext import commands
 from datetime import datetime
@@ -15,12 +16,16 @@ class ManageChannels(commands.Cog):
         self.pref = client.command_prefix
 
     def writelog(self, ctx, entry):
-        f = open("logs/log_%s_%d-%d.txt" % (ctx.guild.name, datetime.now().year, datetime.now().month), "a")
-        content = "%s :: %s \n" % (datetime.now().strftime("%Y-%m-%d/%H:%M:%S"), entry)
+        content = "%s :: %s" % (datetime.now().strftime("%Y-%m-%d/%H:%M:%S"), entry)
         print(content)
-        f.write(content)
-        f.flush()
-        f.close()
+        try:
+            f = open("logs/log_%s_%d-%d.txt" % (ctx.guild.name, datetime.now().year, datetime.now().month), "a")
+            f.write(content)
+            f.flush()
+            f.close()
+        except FileNotFoundError as err:
+            print("%s :: error writelog :: FileNotFoundError :: %s" % (datetime.now().strftime("%Y-%m-%d/%H:%M:%S"), err))
+            os.makedirs('logs')
 
     @commands.command(name='addchannel')
     async def addchannel(self, ctx, channel: discord.TextChannel):
